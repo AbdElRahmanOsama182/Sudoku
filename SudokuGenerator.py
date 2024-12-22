@@ -97,6 +97,9 @@ class SudokuGenerator:
                             self.board[i][j] = num
                             count += self.countSolutions()
                             self.board[i][j] = 0
+                            # we don't need to know the exact number of solutions so we can return early
+                            if count > 1:
+                                return count
                     return count
         return count
 

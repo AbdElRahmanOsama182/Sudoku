@@ -1,14 +1,17 @@
 import random
 from Domain import Domain
 class SudokuGenerator:
-    def __init__(self, difficulty="medium"):
+    def __init__(self, difficulty="medium", debug=False):
         self.difficulty = difficulty
         self.board = [[0 for _ in range(9)] for _ in range(9)]
         self.generateFullBoard()
-        self.printBoard()
-        print("="*30)
+        if debug:
+            self.printBoard()
+            print("="*30)
         self.removeByDifficulty()
-        self.printBoard()
+        if debug:
+            self.printBoard()
+        
 
     def generateFullBoard(self):
         self.fillDiagonal()
@@ -122,10 +125,6 @@ class SudokuGenerator:
         while toBeRemoved > 0:
             toBeRemoved -= self.removeNumbers()
         
-        
-
-
-
 if __name__ == '__main__':
     sudoku = SudokuGenerator("hard")
-
+    sudoku.printBoard()

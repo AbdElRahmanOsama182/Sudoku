@@ -14,6 +14,7 @@ export default {
   methods: {
     startManualPlay() {
       this.mode = 'manual';
+      this.$router.push('/manual-play');
     },
     startAIPlay() {
       this.mode = 'ai';

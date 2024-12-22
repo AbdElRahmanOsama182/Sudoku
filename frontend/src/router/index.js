@@ -3,6 +3,8 @@ import HomeView from '../views/HomeView.vue';
 import CreateView from '../views/CreateView.vue';
 import GenerateView from '../views/GenerateView.vue';
 import PlayView from '../views/PlayView.vue';
+import AISolveView from '../views/AISolveView.vue';
+import ManualPlayView from '../views/ManualPlayView.vue';
 
 const routes = [
   {
@@ -24,7 +26,17 @@ const routes = [
     path: '/play',
     name: 'play',
     component: PlayView
-  }
+  },
+  {
+    path: '/solve-ai',
+    name: 'solve-ai',
+    component: AISolveView
+  },
+  {
+    path: '/manual-play',
+    name: 'manual-play',
+    component: ManualPlayView
+  },
 ];
 
 const router = createRouter({

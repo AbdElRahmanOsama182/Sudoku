@@ -1,19 +1,25 @@
 import random
 from Domain import Domain
+import time
 class SudokuGenerator:
-    def __init__(self, difficulty="medium", debug=False):
-        self.difficulty = difficulty
-        self.board = [[0 for _ in range(9)] for _ in range(9)]
-        self.generateFullBoard()
-        if debug:
-            self.printBoard()
-            print("="*30)
-        self.removeByDifficulty()
-        if debug:
-            self.printBoard()
+    def __init__(self, debug=False):
+        self.difficulty = "Intermediate"
+        self.debug = debug
+        self.board = []
         
+    def generateSudoku(self, difficulty="Intermediate"):
+        self.generateFullBoard()
+        if self.debug:
+            print("Full Board:")
+            self.printBoard()
+            print("=" * 25)
+        self.removeByDifficulty(difficulty)
+        if self.debug:
+            print("Sudoku Board:")
+            self.printBoard()
 
     def generateFullBoard(self):
+        self.board = [[0 for _ in range(9)] for _ in range(9)]
         self.fillDiagonal()
         self.fillBoard()
 
@@ -103,31 +109,44 @@ class SudokuGenerator:
                     return count
         return count
 
-    def removeNumbers(self):
-        row = random.randint(0, 8)
-        col = random.randint(0, 8)
-        while self.board[row][col] == 0:
-            row = random.randint(0, 8)
-            col = random.randint(0, 8)
+    def removeNumbers(self, indexes):
+        row, col = random.choice(indexes)
         temp = self.board[row][col]
         self.board[row][col] = 0
         if self.countSolutions() != 1:
             self.board[row][col] = temp
+            indexes.remove((row, col))
             return 0
         else:
-            return 1 + self.removeNumbers()
+            indexes.remove((row, col))
+            return 1 + self.removeNumbers(indexes)
 
-    def removeByDifficulty(self):
+    def removeByDifficulty(self, difficulty):
+        # generate a list with all the indexes of the board
+        indexes = [(i, j) for i in range(9) for j in range(9)]
         toBeRemoved = 0
-        if self.difficulty == "easy":
+        if difficulty == "Easy":
             toBeRemoved = 30
-        elif self.difficulty == "medium":
+        elif difficulty == "Intermediate":
             toBeRemoved = 40
         else:
             toBeRemoved = 50
-        while toBeRemoved > 0:
-            toBeRemoved -= self.removeNumbers()
+        while toBeRemoved > 0 and len(indexes) > 0:
+            toBeRemoved -= self.removeNumbers(indexes)
+            # print("Indexes remaining:", len(indexes))
         
 if __name__ == '__main__':
-    sudoku = SudokuGenerator("hard")
-    sudoku.printBoard()
+    sudoku = SudokuGenerator()
+    iterations = 10
+    times = []
+    for _ in range(iterations):
+        start = time.time()
+        sudoku.generateSudoku("Easy")
+        # sudoku.generateSudoku("Intermediate")
+        # sudoku.generateSudoku("Hard")
+        end = time.time()
+        times.append(end - start)
+        print(f"Time: {end - start:.6f} seconds")
+    print(f"Average time: {sum(times) / iterations:.6f} seconds")
+    print(f"Minimum time: {min(times):.6f} seconds")
+    print(f"Maximum time: {max(times):.6f} seconds")

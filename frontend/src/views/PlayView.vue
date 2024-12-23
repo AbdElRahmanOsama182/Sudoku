@@ -27,7 +27,7 @@ export default {
 <template>
   <div class="play">
     <h2>Play Sudoku</h2>
-    <SudokuGrid :grid="grid" :is-editable="false" />
+    <SudokuGrid :grid="grid" :is-editable="false" :showNumberBar="false" />
     <div class="controls">
       <button @click="startManualPlay" class="btn">Play Manually</button>
       <button @click="startAIPlay" class="btn primary">Solve with AI</button>

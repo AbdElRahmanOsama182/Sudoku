@@ -57,6 +57,7 @@ export default {
     <SudokuGrid 
       :grid="grid"
       :is-editable="false"
+      :showNumberBar="false"
     />
     <div v-if="!isSolving" class="controls">
       <button 

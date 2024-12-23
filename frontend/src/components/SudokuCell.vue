@@ -16,35 +16,32 @@ export default {
     colIndex: {
       type: Number,
       required: true
+    },
+    isSelected: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
-    handleInput(event) {
-      const value = event.target.value;
-      if (value === '' || (value >= 1 && value <= 9)) {
-        this.$emit('update', {
+    selectCell() {
+      if (!this.isFixed) {
+        this.$emit('select-cell', {
           row: this.rowIndex,
-          col: this.colIndex,
-          value: value === '' ? null : parseInt(value)
+          col: this.colIndex
         });
       }
     }
   }
-}
+};
 </script>
 
 <template>
-  <div class="cell" :class="{ 'fixed': isFixed }">
-    <input 
-      v-if="!isFixed"
-      type="number"
-      :value="value || ''"
-      min="1"
-      max="9"
-      @input="handleInput"
-      class="cell-input"
-    />
-    <span v-else>{{ value }}</span>
+  <div
+    class="cell"
+    :class="{ 'fixed': isFixed, 'selected': isSelected }"
+    @click="selectCell"
+  >
+    <span>{{ value }}</span>
   </div>
 </template>
 
@@ -56,23 +53,14 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
 .cell.fixed {
   background-color: #f0f0f0;
 }
 
-.cell-input {
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  border: none;
-  outline: none;
-}
-
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+.cell.selected {
+  background-color: #7f9eb6;
 }
 </style>

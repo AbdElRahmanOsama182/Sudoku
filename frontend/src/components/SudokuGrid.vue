@@ -18,6 +18,10 @@ export default {
             type: Boolean,
             default: true,
         },
+        incorrectCell: {
+            type: Array,
+            default: () => Array.from({ length: 9 }, () => Array(9).fill(false))
+        }
     },
     data() {
         return {
@@ -86,6 +90,7 @@ export default {
                         selectedCell.row === rowIndex &&
                         selectedCell.col === colIndex
                     "
+                    :isIncorrect="this.incorrectCell[rowIndex][colIndex]"
                     @select-cell="selectCell"
                     @toggle-select-cell="toggleSelectCell"
                 />

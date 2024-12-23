@@ -38,7 +38,7 @@ export default {
 <template>
   <div
     class="cell"
-    :class="{ 'fixed': isFixed, 'selected': isSelected }"
+    :class="{ 'isfixed': isFixed, 'selected': isSelected }"
     @click="selectCell"
   >
     <span>{{ value }}</span>
@@ -56,8 +56,9 @@ export default {
   cursor: pointer;
 }
 
-.cell.fixed {
-  background-color: #f0f0f0;
+.cell.isfixed {
+  background-color: #f0f0f0; /* Different background color */
+  font-weight: bold; /* Mark fixed cells with bold text */
 }
 
 .cell.selected {

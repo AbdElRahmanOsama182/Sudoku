@@ -1,7 +1,7 @@
 import random
 from Domain import Domain
 import time
-from sudoku import Sudoku
+# from sudoku import Sudoku
 from copy import deepcopy
 class SudokuGenerator:
     def __init__(self, debug=False):

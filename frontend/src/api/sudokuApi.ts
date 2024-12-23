@@ -73,6 +73,7 @@ export const solvePuzzleSteps = async (
             `${BASE_URL}/solve-steps`,
             { grid }
         );
+        console.log("Response from solve-steps API:", JSON.stringify(response.data, null, 0)); // Log the response here
         return response.data;
     } catch (error) {
         console.error("Error solving the puzzle with steps:", error);

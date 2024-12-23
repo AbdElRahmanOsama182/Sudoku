@@ -168,7 +168,7 @@ class Solver:
             if v.is_singleton() and not domainCopy[k].is_singleton():
                 self.steps.append([(k[0],k[1], v.get_value())])
 
-        return self.backtrackingSearch(self.domains)
+        return self.backtrackingSearch(self.domains), self.steps
     
 # if __name__ == "__main__":
 #     for _ in range(10000):  # Run the solver 5 times

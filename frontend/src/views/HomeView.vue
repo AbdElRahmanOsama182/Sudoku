@@ -10,7 +10,7 @@ export default {
 
 <template>
   <div class="home">
-    <h1>Sudoku Game</h1>
+    <h1><img class="welcome-logo" src="../assets/sudoku_home.PNG" alt="Sudoku Game" /></h1>
     <div class="buttons">
       <button @click="navigateTo('/create')" class="btn">Create New Sudoku Puzzle</button>
       <button @click="navigateTo('/generate')" class="btn">Generate Random Puzzle</button>
@@ -22,6 +22,13 @@ export default {
 .home {
   text-align: center;
   padding: 2rem;
+}
+
+.welcome-logo {
+  width: auto;
+  max-height: 50vh;
+  display: block;
+  margin: auto;
 }
 
 .buttons {

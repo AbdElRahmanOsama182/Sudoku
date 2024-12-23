@@ -68,6 +68,14 @@ export default {
   text-align: center;
   padding: 2rem;
 }
+.generate h2 {
+  font-size: 2.2rem;
+  font-weight: normal;
+  color: #317133;
+  text-align: center;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+}
 
 .difficulty-controls {
   margin-bottom: 1rem;

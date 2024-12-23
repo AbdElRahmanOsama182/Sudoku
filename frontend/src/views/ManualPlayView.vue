@@ -52,7 +52,7 @@ export default {
 
 <template>
   <div class="manual-play">
-    <h2>Solve Manually</h2>
+    <h2>Your Turn to Play Sudoku!</h2>
     <SudokuGrid 
       :grid="grid"
       :showNumberBar="true"
@@ -71,6 +71,14 @@ export default {
 .manual-play {
   text-align: center;
   padding: 2rem;
+}
+.manual-play h2 {
+  font-size: 2.2rem;
+  font-weight: normal;
+  color: #317133;
+  text-align: center;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
 }
 
 .controls {

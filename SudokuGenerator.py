@@ -2,11 +2,12 @@ import random
 from Domain import Domain
 import time
 from sudoku import Sudoku
+from copy import deepcopy
 class SudokuGenerator:
     def __init__(self, debug=False):
         self.debug = debug
         self.board = []
-        
+        self.validatedBoard = []
     def generateSudoku(self, difficulty="Intermediate"):
         self.generateFullBoard()
         if self.debug:
@@ -102,6 +103,7 @@ class SudokuGenerator:
 
     def countSolutions(self, empty):
         if empty == 0:
+            self.validatedBoard = deepcopy(self.board)
             return 1
         # board must have at least 17 numbers to have a unique solution
         if empty > 81 - 17:
@@ -131,15 +133,15 @@ class SudokuGenerator:
     def checkUserBoard(self, userBoard):
         self.board = userBoard
         if not self.boardValidation():
-            return False, "Invalid board, at least one of the numbers is repeated in the same row, column or box"
+            return False, "Invalid board, at least one of the numbers is repeated in the same row, column or box", None
         empty = sum([row.count(0) for row in self.board])
         # print(empty)
         solutions = self.countSolutions(empty)
         if solutions == 0:
-            return False, "Invalid board, no solution"
+            return False, "Invalid board, no solution", None
         if solutions > 1:
-            return False, "Invalid board, multiple solutions"
-        return True, "Valid board"
+            return False, "Invalid board, multiple solutions", None
+        return True, "Valid board", self.validatedBoard
 
     def boardValidation(self):
         rows = [Domain() for _ in range(9)]
@@ -176,7 +178,7 @@ if __name__ == '__main__':
         # sudoku.generateSudoku("Easy")
         # sudoku.generateSudoku("Intermediate")
         sudoku.generateSudoku("Hard")
-        valid, message = sudoku.checkUserBoard(sudoku.board)
+        valid, message, _ = sudoku.checkUserBoard(sudoku.board)
         # verify the board is valid with the library
         sudokuL = Sudoku(3, 3, sudoku.board)
         if not valid:
@@ -202,13 +204,22 @@ if __name__ == '__main__':
         [0, 9, 8, 0, 0, 0, 0, 6, 0],
         [8, 0, 0, 0, 6, 0, 0, 0, 3],
         [4, 0, 0, 8, 0, 3, 0, 0, 1],
-        [7, 0, 0, 0, 1, 0, 0, 0, 6],
+        [7, 0, 0, 0, 2, 0, 0, 0, 6],
         [0, 6, 0, 0, 0, 0, 2, 8, 0],
         [0, 0, 0, 4, 1, 9, 0, 0, 5],
         [0, 0, 0, 0, 8, 0, 0, 7, 9]
     ]
-    print(sudoku.checkUserBoard(board))
+    valid, message, validatedBoard = sudoku.checkUserBoard(board)
+    if not valid:
+        sudoku.printBoard()
+        print(message)
+
     # verify the board is valid with the library
-    sudokuL = Sudoku(3, 3, board)
+    sudokuL = Sudoku(3, 3, board).solve()
     print("Board is valid:", sudokuL.validate())
     print("Board has many solutions:", sudokuL.has_multiple_solutions())
+    if validatedBoard:
+        sudoku.board = validatedBoard
+        sudoku.printBoard()
+        # compare the two boards
+        print("Boards are equal:", sudokuL.board == sudoku.board)

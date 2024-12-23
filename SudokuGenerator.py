@@ -1,33 +1,47 @@
 import random
 from Domain import Domain
+from copy import deepcopy
 class SudokuGenerator:
-    def __init__(self, difficulty="medium", debug=False):
+    def __init__(self, difficulty="medium", mrv=False, debug=False):
         self.difficulty = difficulty
-        self.board = [[0 for _ in range(9)] for _ in range(9)]
+        self.mrv = mrv
+        self.debug = debug
+        
+    def generateSudoku(self):
         self.generateFullBoard()
-        if debug:
+        if self.debug:
             self.printBoard()
             print("="*30)
         self.removeByDifficulty()
-        if debug:
+        if self.debug:
             self.printBoard()
-        
+        return self.board
 
     def generateFullBoard(self):
-        self.fillDiagonal()
-        self.fillBoard()
+        self.board = [[0 for _ in range(9)] for _ in range(9)]
+        domains = [[Domain() for _ in range(9)] for _ in range(9)]
+        self.fillDiagonal(domains)
+        if not self.mrv:
+            self.fillBoard()
+        else:
+            self.fillBoardMRV(domains)
 
-    def fillDiagonal(self):
+    def fillDiagonal(self, domains):
         for i in range(0, 9, 3):
-            self.fillBox(i, i)
+            self.fillBox(i, i, domains)
 
-    def fillBox(self, row, col):
+    def fillBox(self, row, col, domains):
         boxDomain = Domain()
         for i in range(row, row + 3):
             for j in range(col, col + 3):
                 num = random.choice(boxDomain.get_domain())
                 self.board[i][j] = num
                 boxDomain.remove(num)
+                if self.mrv:
+                    domains[i][j] = Domain(0)
+                    for k in range(9):
+                        domains[i][k].remove(num)
+                        domains[k][j].remove(num)
 
     def isValid(self, row, col, num):
         for i in range(9):
@@ -39,6 +53,43 @@ class SudokuGenerator:
                 if self.board[i + bRow][j + bCol] == num:
                     return False
         return True
+
+    def getMRV(self, domains):
+        minDomain = 10
+        minIndex = (-1, -1)
+        for i in range(9):
+            for j in range(9):
+                if self.board[i][j] == 0 and domains[i][j].domain_size() < minDomain:
+                    minDomain = domains[i][j].domain_size()
+                    minIndex = (i, j)
+        if minIndex == (-1, -1):
+            return None, None
+        return minIndex, domains[minIndex[0]][minIndex[1]].get_domain()
+
+    def updateDomains(self, domains, row, col, num):
+        newDomains = deepcopy(domains)
+        newDomains[row][col] = Domain(0)
+        for i in range(9):
+            newDomains[row][i].remove(num)
+            newDomains[i][col].remove(num)
+        bRow, bCol = 3 * (row // 3), 3 * (col // 3)
+        for i in range(3):
+            for j in range(3):
+                newDomains[i + bRow][j + bCol].remove(num)
+        return newDomains
+
+    def fillBoardMRV(self, domains):
+        index, domain = self.getMRV(domains)
+        if index is None:
+            return True
+        r, c = index
+        for num in domain:
+            self.board[r][c] = num
+            newDomains = self.updateDomains(domains, r, c, num)
+            if self.fillBoardMRV(newDomains):
+                return True
+            self.board[r][c] = 0
+        return False
     
     def fillBoard(self, i=0, j=0):
         if i == 8 and j == 9:
@@ -120,9 +171,9 @@ class SudokuGenerator:
     def removeByDifficulty(self):
         toBeRemoved = 0
         if self.difficulty == "easy":
-            toBeRemoved = 30
-        elif self.difficulty == "medium":
             toBeRemoved = 40
+        elif self.difficulty == "medium":
+            toBeRemoved = 46
         else:
             toBeRemoved = 50
         while toBeRemoved > 0:

@@ -6,8 +6,8 @@ class Solver:
     def __init__(self, board):
         self.board = board
         self.domains = self.initializeDomains(board)
-        self.neighbors = self.buildNeighbors()  
-
+        self.neighbors = self.buildNeighbors()      
+        self.steps = []
     @staticmethod
     def buildNeighbors():
         neighbors = {}
@@ -97,10 +97,22 @@ class Solver:
         for value in domains[cell].get_domain():
             domainCopy = {key: v.copy() for key,v in domains.items()}
             domainCopy[cell] = Domain(1 << (value - 1))
+
+            step =[]
             if self.ac3(domainCopy):
+                added = False
+                for k, v in domainCopy.items():
+                    if v.is_singleton() and not domains[k].is_singleton():
+                        step.append((k[0],k[1], v.get_value()))
+                if(step):
+                    added = True
+                self.steps.append(step)
                 result = self.backtrackingSearch(domainCopy)
                 if result:
-                    return result 
+                    return result
+                else:
+                    if added:
+                        self.steps.pop()
         return False  
     
     
@@ -135,16 +147,29 @@ class Solver:
         
         return True
 
+    def validateSteps(self, board):
+        for step in self.steps:
+            for row, col, value in step:
+                board[row][col] = value
+            # print("Step:")
+            # for row in board:
+            #     print(row)
 
+        return True
+    
     def solve(self):
-        # domains = self.domains.copy()
-        # if not self.ac3(domains):  
-        #     return None  
+        domainCopy = {key: v.copy() for key,v in self.domains.items()}
         self.ac3(self.domains)
+
+        #just for getting steps
+        for(k,v) in self.domains.items():
+            if v.is_singleton() and not domainCopy[k].is_singleton():
+                self.steps.append([(k[0],k[1], v.get_value())])
+
         return self.backtrackingSearch(self.domains)
     
 if __name__ == "__main__":
-    for _ in range(1000):  # Run the solver 5 times
+    for _ in range(10000):  # Run the solver 5 times
         generator = SudokuGenerator()
         board = generator.board
         # board = [
@@ -169,12 +194,20 @@ if __name__ == "__main__":
         if solvedBoard:
             # print("Solved Board:")
             if  solver.isValidSudoku(solvedBoard):
+
+                # print("steps")
                 
-                print("done")
+                solver.validateSteps(board)
+                if(board != solvedBoard):
+                    print("steps are incorrect")
+
+                # for(row) in board:
+                #     print(row)
+                # print("done")
             else:
                 print("Initial Board:")
-                for row in board:
-                    print(row)
+                # for row in board:
+                #     print(row)
                 print("Solved Board:")
                 for row in solvedBoard:
                     print(row)

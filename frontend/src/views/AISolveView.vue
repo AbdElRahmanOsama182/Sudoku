@@ -9,8 +9,6 @@ export default {
   data() {
     return {
       steps: [],
-      currentStepIndex: -1,
-      timeElapsed: 0,
       isSolving: false
     }
   },
@@ -20,25 +18,27 @@ export default {
     },
     grid() {
       return this.store.grid;
+    },
+    timeElapsed() {
+      return this.store.timeElapsed;
+    },
+    currentStepIndex() {
+      return this.store.currentStepIndex;
     }
   },
   methods: {
     async startSolving() {
       this.isSolving = true;
-      const startTime = Date.now();
-      
-      try {
-        // TODO: Integrate with backend AI solver
-        // Placeholder for demonstration
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        this.steps = [this.grid]; // Will be replaced with actual solving steps
-        this.timeElapsed = Date.now() - startTime;
-        this.currentStepIndex = 0;
-      } catch (error) {
-        alert('Error solving the puzzle');
-      } finally {
-        this.isSolving = false;
-      }
+      this.store.computeSolvingSteps();
+      this.store.solveSteps.forEach((step) => {
+        // For each step, apply the moves and store the grid state
+        step.forEach(([row, col, value]) => {
+          this.grid[row][col] = value; // Update the grid based on the move
+        });
+
+        // Push the grid state into steps
+        this.steps.push(JSON.parse(JSON.stringify(this.grid)));
+      });
     },
     prevStep() {
       if (this.currentStepIndex > 0) {

@@ -3,7 +3,6 @@ export type Difficulty = 'Easy' | 'Intermediate' | 'Hard';
 export interface Cell {
   value: number | null;
   isFixed: boolean;
-  notes: number[];
 }
 
 export interface SudokuState {

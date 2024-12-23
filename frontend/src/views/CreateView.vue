@@ -22,9 +22,11 @@ export default {
     async validateAndProceed() {
       const store = useSudokuStore();
       try {
-        // TODO: Add backend validation
-        const isValid = true; // Placeholder for backend validation
-        if (isValid) {
+        const response = await store.validateGrid();
+        alert(response.message);
+        if (response.success) {
+          store.isCreatingMode = false;
+          store.solutionGrid = response.solution;
           for (let i = 0; i < this.grid.length; i++) {
             for (let j = 0; j < this.grid[i].length; j++) {
               // Mark each cell as fixed if it contains value
@@ -34,8 +36,6 @@ export default {
           }
           store.grid = this.grid;
           this.$router.push('/play');
-        } else {
-          alert('Invalid Sudoku configuration!');
         }
       } catch (error) {
         alert('Error validating the puzzle');

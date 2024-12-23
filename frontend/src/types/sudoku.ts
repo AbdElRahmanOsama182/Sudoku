@@ -11,7 +11,8 @@ export interface SudokuState {
   isCreatingMode: boolean;
   isSolvingMode: boolean;
   isAISolving: boolean;
-  solveSteps: Cell[][][];
+  solveSteps: number[][][] | null;
+  solutionGrid: number[][] | null;
   currentStepIndex: number;
   timeElapsed: number;
 }

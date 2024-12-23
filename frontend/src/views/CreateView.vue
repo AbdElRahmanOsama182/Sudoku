@@ -47,7 +47,7 @@ export default {
 
 <template>
   <div class="create">
-    <h2>Create New Sudoku Puzzle</h2>
+    <h2>Create New Sudoku</h2>
     <SudokuGrid 
       :grid="grid"
       :showNumberBar="true"
@@ -68,6 +68,14 @@ export default {
   padding: 2rem;
 }
 
+.create h2 {
+  font-size: 2.2rem;
+  font-weight: normal;
+  color: #317133;
+  text-align: center;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+}
 .controls {
   margin-top: 1rem;
   display: flex;

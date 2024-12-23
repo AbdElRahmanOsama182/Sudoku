@@ -29,7 +29,7 @@ export default {
 
 <template>
   <div class="play">
-    <h2>Play Sudoku</h2>
+    <h2>Play Menu</h2>
     <SudokuGrid :grid="grid" :is-editable="false" :showNumberBar="false" />
     <div class="controls">
       <button @click="startManualPlay" class="btn">Play Manually</button>
@@ -41,6 +41,15 @@ export default {
 </template>
 
 <style scoped>
+.play h2 {
+  font-size: 2.2rem;
+  font-weight: normal;
+  color: #317133;
+  text-align: center;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+}
+
 .play {
   text-align: center;
   padding: 2rem;

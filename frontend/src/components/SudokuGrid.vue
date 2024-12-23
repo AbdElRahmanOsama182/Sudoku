@@ -45,7 +45,7 @@ export default {
 <template>
   <div class="grid-wrapper">
     <div class="grid">
-      <div v-for="(row, rowIndex) in grid" :key="rowIndex" class="row">
+      <div v-for="(row, rowIndex) in this.grid" :key="rowIndex" class="row">
         <SudokuCell
           v-for="(cell, colIndex) in row"
           :key="colIndex"
@@ -95,7 +95,7 @@ export default {
 }
 
 .cell:last-child {
-  border-right: none;
+  border-right: 1px solid #ccc;
 }
 
 .number-bar {

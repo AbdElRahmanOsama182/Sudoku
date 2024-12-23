@@ -4,7 +4,6 @@ import time
 from sudoku import Sudoku
 class SudokuGenerator:
     def __init__(self, debug=False):
-        self.difficulty = "Intermediate"
         self.debug = debug
         self.board = []
         

@@ -100,7 +100,7 @@ class SudokuGenerator:
                             # we don't need to know the exact number of solutions so we can return early
                             if count > 1:
                                 return count
-                    return count
+        return count
         return count
 
     def removeNumbers(self):

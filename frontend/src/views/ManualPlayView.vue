@@ -50,6 +50,7 @@ export default {
     <h2>Solve Manually</h2>
     <SudokuGrid 
       :grid="grid"
+      :showNumberBar="true"
       @update-cell="updateCell"
     />
     <div class="controls">

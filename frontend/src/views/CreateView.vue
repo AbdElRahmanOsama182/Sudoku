@@ -40,6 +40,7 @@ export default {
     <h2>Create New Sudoku Puzzle</h2>
     <SudokuGrid 
       :grid="grid"
+      :showNumberBar="true"
       @update-cell="updateCell"
     />
     <div class="controls">

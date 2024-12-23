@@ -45,7 +45,7 @@ export default {
         {{ level }}
       </button>
     </div>
-    <SudokuGrid :grid="grid" :is-editable="false" />
+    <SudokuGrid :grid="grid" :is-editable="false" :showNumberBar="false" />
     <div class="controls">
       <button @click="generatePuzzle" class="btn">Generate Again</button>
       <button @click="proceedToPlay" class="btn primary">Start Playing</button>

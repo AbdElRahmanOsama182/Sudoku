@@ -1,6 +1,7 @@
 <script>
 import SudokuGrid from '../components/SudokuGrid.vue';
 import { createEmptyGrid } from '../utils/sudoku';
+import { useSudokuStore } from '../stores/sudoku';
 
 export default {
   components: {
@@ -19,10 +20,19 @@ export default {
       this.grid[row][col].value = value;
     },
     async validateAndProceed() {
+      const store = useSudokuStore();
       try {
         // TODO: Add backend validation
         const isValid = true; // Placeholder for backend validation
         if (isValid) {
+          for (let i = 0; i < this.grid.length; i++) {
+            for (let j = 0; j < this.grid[i].length; j++) {
+              // Mark each cell as fixed if it contains value
+              if (this.grid[i][j].value !== null)
+                this.grid[i][j].isFixed = true;
+            }
+          }
+          store.grid = this.grid;
           this.$router.push('/play');
         } else {
           alert('Invalid Sudoku configuration!');
@@ -45,6 +55,8 @@ export default {
     />
     <div class="controls">
       <button @click="clearGrid" class="btn">Clear Grid</button>
+      <!-- Home button -->
+      <router-link to="/" class="btn home-btn">Go to Home</router-link>
       <button @click="validateAndProceed" class="btn primary">Done Creating</button>
     </div>
   </div>
@@ -74,5 +86,18 @@ export default {
 .btn.primary {
   background: #4CAF50;
   color: white;
+}
+.home-btn {
+  background-color: #007BFF; /* Blue color for the home button */
+  color: white;
+  text-decoration: none; /* Remove the default underline from the link */
+}
+
+.home-btn:hover {
+  background-color: #0056b3; /* Darker blue when hovered */
+}
+
+.home-btn:active {
+  background-color: #004085; /* Even darker blue when clicked */
 }
 </style>

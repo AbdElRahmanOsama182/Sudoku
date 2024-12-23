@@ -1,46 +1,51 @@
 <script>
 import SudokuGrid from '../components/SudokuGrid.vue';
-import { validateGrid } from '../utils/sudoku';
+import { useSudokuStore } from '../stores/sudoku'; // Import the store
 
 export default {
   components: {
     SudokuGrid
   },
+  computed: {
+    store() {
+      return useSudokuStore(); // Access the store
+    },
+    grid() {
+      return this.store.grid;
+    }
+  },
   data() {
     return {
-      grid: [], // Will be populated from store
       isComplete: false
     }
   },
   methods: {
     updateCell({ row, col, value }) {
-      this.grid[row][col].value = value;
+      this.store.setCellValue(row, col, value);
       this.checkCompletion();
     },
     validateCurrentProgress() {
-      if (validateGrid(this.grid)) {
+      if (this.store.validateGrid()) {
         alert('Valid progress so far!');
       } else {
         alert('There are some errors in your solution.');
       }
     },
     clearGrid() {
-      this.grid = this.grid.map(row =>
-        row.map(cell => ({
-          ...cell,
-          value: cell.isFixed ? cell.value : null
-        }))
-      );
+      this.store.clearGrid(); // Clear the grid in the store
     },
     checkCompletion() {
       const isComplete = this.grid.every(row =>
         row.every(cell => cell.value !== null)
       );
-      if (isComplete && validateGrid(this.grid)) {
+      if (isComplete && this.store.validateGrid()) {
         this.isComplete = true;
         alert('Congratulations! You solved the puzzle!');
       }
     }
+  },
+  mounted() {
+    this.checkCompletion();
   }
 }
 </script>
@@ -55,6 +60,8 @@ export default {
     />
     <div class="controls">
       <button @click="validateCurrentProgress" class="btn">Validate Progress</button>
+      <!-- Home button -->
+      <router-link to="/" class="btn home-btn">Go to Home</router-link>
       <button @click="clearGrid" class="btn">Clear Input</button>
     </div>
   </div>
@@ -79,5 +86,18 @@ export default {
   border-radius: 4px;
   cursor: pointer;
   background: #f0f0f0;
+}
+.home-btn {
+  background-color: #007BFF; /* Blue color for the home button */
+  color: white;
+  text-decoration: none; /* Remove the default underline from the link */
+}
+
+.home-btn:hover {
+  background-color: #0056b3; /* Darker blue when hovered */
+}
+
+.home-btn:active {
+  background-color: #004085; /* Even darker blue when clicked */
 }
 </style>

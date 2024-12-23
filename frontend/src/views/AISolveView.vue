@@ -1,5 +1,6 @@
 <script>
 import SudokuGrid from '../components/SudokuGrid.vue';
+import { useSudokuStore } from '../stores/sudoku'; // Import the store
 
 export default {
   components: {
@@ -7,11 +8,18 @@ export default {
   },
   data() {
     return {
-      grid: [], // Will be populated from store
       steps: [],
       currentStepIndex: -1,
       timeElapsed: 0,
       isSolving: false
+    }
+  },
+  computed: {
+    store() {
+      return useSudokuStore(); // Access the store
+    },
+    grid() {
+      return this.store.grid;
     }
   },
   methods: {
@@ -67,6 +75,8 @@ export default {
       >
         Previous
       </button>
+      <!-- Home button -->
+      <router-link to="/" class="btn home-btn">Go to Home</router-link>
       <button 
         @click="nextStep"
         :disabled="currentStepIndex >= steps.length - 1"
@@ -111,5 +121,19 @@ export default {
 .time {
   margin-top: 1rem;
   font-weight: bold;
+}
+
+.home-btn {
+  background-color: #007BFF; /* Blue color for the home button */
+  color: white;
+  text-decoration: none; /* Remove the default underline from the link */
+}
+
+.home-btn:hover {
+  background-color: #0056b3; /* Darker blue when hovered */
+}
+
+.home-btn:active {
+  background-color: #004085; /* Even darker blue when clicked */
 }
 </style>

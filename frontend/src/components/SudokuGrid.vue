@@ -37,6 +37,16 @@ export default {
         });
         this.selectedCell = null; // Deselect after updating
       }
+    },
+    clearSelectedCell() {
+      if (this.selectedCell) {
+        this.$emit('update-cell', {
+          row: this.selectedCell.row,
+          col: this.selectedCell.col,
+          value: null // Clear the value
+        });
+        this.selectedCell = null; // Deselect after clearing
+      }
     }
   }
 };
@@ -66,6 +76,9 @@ export default {
         class="number-btn"
       >
         {{ num }}
+      </button>
+      <button @click="clearSelectedCell" class="clear-btn">
+        <span role="img" aria-label="clear">❌</span>
       </button>
     </div>
   </div>
@@ -118,6 +131,24 @@ export default {
 
 .number-btn:hover {
   background: #2196F3;
+  color: white;
+}
+.clear-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background: #f0f0f0;
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.clear-btn:hover {
+  background: #FF5722;
   color: white;
 }
 </style>

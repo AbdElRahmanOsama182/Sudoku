@@ -55,6 +55,7 @@ export const useSudokuStore = defineStore("sudoku", {
         },
 
         async validateGrid(): Promise<ValidationResponse> {
+            console.log("In Validate Grid", this.grid);
             try {
                 const response = await validatePuzzle(
                     this.grid.map((row) => row.map((cell) => cell.value ?? 0))

@@ -53,7 +53,6 @@ export const generatePuzzle = async (
             `${BASE_URL}/generate`,
             { difficulty }
         );
-        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error("Error generating the puzzle:", error);

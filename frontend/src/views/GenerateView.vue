@@ -18,8 +18,7 @@ export default {
     }
   },
   methods: {
-    generatePuzzle() {
-      // TODO: Add backend integration for puzzle generation using this.difficulty
+    async generatePuzzle() {
       this.store.generatePuzzle();
       console.log(this.store.grid);
     },
@@ -28,9 +27,17 @@ export default {
       this.store.setDifficulty(level);
       this.generatePuzzle();
     },
-    proceedToPlay() {
-      // TODO: Validate from back end first
-      this.$router.push('/play');
+    async proceedToPlay() {
+      try {
+        const response = await store.validateGrid();
+        alert(response.message);
+        if (response.success) {
+          store.solutionGrid = response.solution;
+          this.$router.push('/play');
+        }
+      } catch (error) {
+        console.log('Error validating and proceeding');
+      }
     }
   },
   mounted() {

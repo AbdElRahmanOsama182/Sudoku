@@ -25,11 +25,7 @@ export default {
       this.checkCompletion();
     },
     validateCurrentProgress() {
-      if (this.store.validateGrid()) {
-        alert('Valid progress so far!');
-      } else {
-        alert('There are some errors in your solution.');
-      }
+      // TODO: implement logic for validate current progress
     },
     clearGrid() {
       this.store.clearGrid(); // Clear the grid in the store

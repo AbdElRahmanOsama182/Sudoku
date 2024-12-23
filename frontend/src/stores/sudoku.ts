@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import type { Cell, Difficulty, SudokuState } from '../types/sudoku';
 import { createMockGrid } from '../utils/sudoku';
+import { validatePuzzle, generatePuzzle, solvePuzzleSteps } from '../api/sudokuApi';
+import type { GeneratePuzzleResponse, ValidationResponse, SolveStepsResponse} from '../api/sudokuApi';
 
 export const useSudokuStore = defineStore('sudoku', {
   state: (): SudokuState => ({
@@ -14,9 +16,10 @@ export const useSudokuStore = defineStore('sudoku', {
     isCreatingMode: false,
     isSolvingMode: false,
     isAISolving: false,
-    solveSteps: [],
+    solveSteps: null,
+    solutionGrid: null,
     currentStepIndex: -1,
-    timeElapsed: 0
+    timeElapsed: 0.0
   }),
 
   actions: {
@@ -39,17 +42,49 @@ export const useSudokuStore = defineStore('sudoku', {
       }
     },
 
-    validateGrid(): boolean {
-      // const grid = this.grid;
-      // TODO: validate from backend
-      return true;
+    async validateGrid(): Promise<ValidationResponse> {
+      try {
+        const response = await validatePuzzle(
+          this.grid.map(row => row.map(cell => cell.value ?? 0))
+        );
+        this.solutionGrid = response.solution;
+        return response;
+      } catch (error) {
+        console.error('Error validating grid:', error);
+        return { success: false, message: 'Validation failed.', solution: null };
+      }
     },
 
-    generatePuzzle() {
-      // TODO: Generate from backend
-      // Full mock grid for testing    
-      // Assign the mock grid to the store's state
-      this.grid = createMockGrid();
-    }    
+    async generatePuzzle() {
+      try {
+        const response: GeneratePuzzleResponse = await generatePuzzle(this.difficulty);
+          this.grid = response.grid.map(row =>
+            row.map(value => ({
+              value,
+              isFixed: value !== null,
+            }))
+          );
+      } catch (error) {
+        console.error('Error generating puzzle:', error);
+      }
+    }, 
+    
+    async computeSolvingSteps() {
+      try {
+        this.isAISolving=true;
+        const response: SolveStepsResponse = await solvePuzzleSteps(
+          this.grid.map(row => row.map(cell => cell.value ?? 0))
+        );
+        this.solveSteps = response.steps;
+        this.timeElapsed = response.timeElapsed;
+        this.currentStepIndex = 0; // Start from the first step
+      }
+      catch (error) {
+        console.error('Error getting steps using AI:', error);
+      }
+      finally {
+        this.isAISolving = false;
+      }
+    }
   }
 });

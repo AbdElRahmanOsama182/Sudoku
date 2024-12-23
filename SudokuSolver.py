@@ -148,6 +148,7 @@ class Solver:
         return True
 
     def validateSteps(self, board):
+        # print(self.steps)
         for step in self.steps:
             for row, col, value in step:
                 board[row][col] = value
@@ -158,6 +159,7 @@ class Solver:
         return True
     
     def solve(self):
+
         domainCopy = {key: v.copy() for key,v in self.domains.items()}
         self.ac3(self.domains)
 
@@ -168,54 +170,54 @@ class Solver:
 
         return self.backtrackingSearch(self.domains)
     
-if __name__ == "__main__":
-    for _ in range(10000):  # Run the solver 5 times
-        generator = SudokuGenerator()
-        board = generator.board
-        # board = [
-        #     [6, 1, 7, 4, 2, 3, 8, 5, 9],
-        #     [5, 4, 8, 1, 7, 9, 3, 2, 6],
-        #     [9, 3, 2, 0, 8, 0, 1, 0, 0],
-        #     [1, 6, 0, 0, 5, 7, 0, 8, 0],
-        #     [0, 7, 0, 0, 4, 0, 0, 1, 5],
-        #     [4, 8, 5, 9, 6, 1, 2, 0, 0],
-        #     [7, 5, 1, 0, 9, 0, 0, 0, 2],
-        #     [8, 0, 6, 7, 3, 0, 5, 0, 1],
-        #     [0, 0, 4, 0, 1, 0, 7, 0, 8]
-        # ] 
+# if __name__ == "__main__":
+#     for _ in range(10000):  # Run the solver 5 times
+#         generator = SudokuGenerator()
+#         board = generator.board
+#         # board = [
+#         #     [0,0, 0, 0, 0, 0, 0, 0, 0],
+#         #     [0, 0, 0,0, 0, 0, 0, 0, 0],
+#         #     [0, 0, 0, 0, 0, 0,0, 0, 0],
+#         #     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+#         #     [0, 0, 0, 0, 0, 0, 0,0, 0],
+#         #     [0, 0, 0, 0, 0,0, 0, 0, 0],
+#         #     [0, 0,0, 0, 0, 0, 0, 0, 0],
+#         #     [0, 0, 0, 0, 0, 0, 0, 0,0],
+#         #     [0, 0, 0, 0, 0, 0, 0, 0, 0]
+#         # ] 
       
-        # print("Initial Board:")
-        # for row in board:
-        #     print(row)
+#         # print("Initial Board:")
+#         # for row in board:
+#         #     print(row)
 
-        solver = Solver(board)
-        solvedBoard = solver.solve()
+#         solver = Solver(board)
+#         solvedBoard = solver.solve()
         
-        if solvedBoard:
-            # print("Solved Board:")
-            if  solver.isValidSudoku(solvedBoard):
+#         if solvedBoard:
+#             # print("Solved Board:")
+#             if  solver.isValidSudoku(solvedBoard):
 
-                # print("steps")
+#                 # print("steps")
                 
-                solver.validateSteps(board)
-                if(board != solvedBoard):
-                    print("steps are incorrect")
+#                 solver.validateSteps(board)
+#                 if(board != solvedBoard):
+#                     print("steps are incorrect")
 
-                # for(row) in board:
-                #     print(row)
-                # print("done")
-            else:
-                print("Initial Board:")
-                # for row in board:
-                #     print(row)
-                print("Solved Board:")
-                for row in solvedBoard:
-                    print(row)
-                print("The solution is invalid.")
-                break
-        else:
-            print("Initial Board:")
-            for row in board:
-                print(row)
-            print("The solution is invalid.")
-        # print("="*30)
+#                 # for(row) in board:
+#                 #     print(row)
+#                 # print("done")
+#             else:
+#                 print("Initial Board:")
+#                 # for row in board:
+#                 #     print(row)
+#                 print("Solved Board:")
+#                 for row in solvedBoard:
+#                     print(row)
+#                 print("The solution is invalid.")
+#                 break
+#         else:
+#             print("Initial Board:")
+#             for row in board:
+#                 print(row)
+#             print("The solution is invalid.")
+#         # print("="*30)

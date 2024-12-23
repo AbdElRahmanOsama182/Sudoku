@@ -101,7 +101,6 @@ class SudokuGenerator:
                             if count > 1:
                                 return count
         return count
-        return count
 
     def removeNumbers(self):
         row = random.randint(0, 8)

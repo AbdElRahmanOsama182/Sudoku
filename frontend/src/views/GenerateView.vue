@@ -1,6 +1,7 @@
 <script>
 import SudokuGrid from '../components/SudokuGrid.vue';
-import { createEmptyGrid } from '../utils/sudoku';
+import { useSudokuStore } from '../stores/sudoku';
+// import { createEmptyGrid } from '../utils/sudoku';
 
 export default {
   components: {
@@ -8,20 +9,27 @@ export default {
   },
   data() {
     return {
-      grid: createEmptyGrid(),
-      difficulty: 'Easy'
+      difficulty: 'Easy',
+    }
+  },
+  computed: {
+    store() {
+      return useSudokuStore(); // Access the store
     }
   },
   methods: {
     generatePuzzle() {
-      // TODO: Add backend integration for puzzle generation
-      this.grid = createEmptyGrid();
+      // TODO: Add backend integration for puzzle generation using this.difficulty
+      this.store.generatePuzzle();
+      console.log(this.store.grid);
     },
     setDifficulty(level) {
       this.difficulty = level;
+      this.store.setDifficulty(level);
       this.generatePuzzle();
     },
     proceedToPlay() {
+      // TODO: Validate from back end first
       this.$router.push('/play');
     }
   },
@@ -45,9 +53,11 @@ export default {
         {{ level }}
       </button>
     </div>
-    <SudokuGrid :grid="grid" :is-editable="false" :showNumberBar="false" />
+    <SudokuGrid :grid="this.store.grid" :is-editable="false" :showNumberBar="false" />
     <div class="controls">
       <button @click="generatePuzzle" class="btn">Generate Again</button>
+      <!-- Home button -->
+      <router-link to="/" class="btn home-btn">Go to Home</router-link>
       <button @click="proceedToPlay" class="btn primary">Start Playing</button>
     </div>
   </div>
@@ -89,5 +99,19 @@ export default {
 .btn.primary {
   background: #4CAF50;
   color: white;
+}
+
+.home-btn {
+  background-color: #007BFF; /* Blue color for the home button */
+  color: white;
+  text-decoration: none; /* Remove the default underline from the link */
+}
+
+.home-btn:hover {
+  background-color: #0056b3; /* Darker blue when hovered */
+}
+
+.home-btn:active {
+  background-color: #004085; /* Even darker blue when clicked */
 }
 </style>

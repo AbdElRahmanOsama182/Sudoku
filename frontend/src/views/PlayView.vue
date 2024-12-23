@@ -1,14 +1,17 @@
 <script>
 import SudokuGrid from '../components/SudokuGrid.vue';
+import { useSudokuStore } from '../stores/sudoku'; // Import the store
 
 export default {
   components: {
     SudokuGrid
   },
-  data() {
-    return {
-      grid: [], // Will be populated from store/props
-      mode: null // 'manual' or 'ai'
+  computed: {
+    store() {
+      return useSudokuStore(); // Access the store
+    },
+    grid() {
+      return this.store.grid;
     }
   },
   methods: {
@@ -30,6 +33,8 @@ export default {
     <SudokuGrid :grid="grid" :is-editable="false" :showNumberBar="false" />
     <div class="controls">
       <button @click="startManualPlay" class="btn">Play Manually</button>
+      <!-- Home button -->
+      <router-link to="/" class="btn home-btn">Go to Home</router-link>
       <button @click="startAIPlay" class="btn primary">Solve with AI</button>
     </div>
   </div>
@@ -59,5 +64,18 @@ export default {
 .btn.primary {
   background: #4CAF50;
   color: white;
+}
+.home-btn {
+  background-color: #007BFF; /* Blue color for the home button */
+  color: white;
+  text-decoration: none; /* Remove the default underline from the link */
+}
+
+.home-btn:hover {
+  background-color: #0056b3; /* Darker blue when hovered */
+}
+
+.home-btn:active {
+  background-color: #004085; /* Even darker blue when clicked */
 }
 </style>

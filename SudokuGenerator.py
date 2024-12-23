@@ -5,9 +5,12 @@ from sudoku import Sudoku
 from copy import deepcopy
 class SudokuGenerator:
     def __init__(self, debug=False, mrv=False):
+    def __init__(self, debug=False, mrv=False):
         self.debug = debug
         self.board = []
         self.validatedBoard = []
+        self.mrv = mrv
+
         self.mrv = mrv
 
     def generateSudoku(self, difficulty="Intermediate"):

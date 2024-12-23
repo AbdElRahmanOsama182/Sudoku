@@ -27,10 +27,11 @@ def validate_puzzle():
     try:
         data = request.get_json()
         grid = data.get('grid')
-
+    
         # Perform validation logic
         is_valid, message, solution = sudoku_generator.checkUserBoard(grid)
-
+        sudoku_generator.printBoard()
+        print(is_valid, message, solution)
         return jsonify({
             'success': is_valid,
             'message': message,

@@ -22,5 +22,27 @@ def generate_puzzle():
             'message': 'Failed to generate puzzle'
         }), 500
 
+@app.route('/api/sudoku/validate', methods=['POST'])
+def validate_puzzle():
+    try:
+        data = request.get_json()
+        grid = data.get('grid')
+
+        # Perform validation logic
+        is_valid, message, solution = sudoku_generator.checkUserBoard(grid)
+
+        return jsonify({
+            'success': is_valid,
+            'message': message,
+            'solution': solution if is_valid else None
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'error': str(e),
+            'message': 'Failed to validate puzzle'
+        }), 500
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='localhost', port=8080)

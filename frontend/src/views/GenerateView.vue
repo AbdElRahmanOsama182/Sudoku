@@ -30,7 +30,7 @@ export default {
         async proceedToPlay() {
             try {
                 const response = await this.store.validateGrid();
-                alert(response.message);
+                // alert(response.message);
                 console.log(response);
                 if (response.success) {
                     this.store.solutionGrid = response.solution;

@@ -10,6 +10,7 @@ export default {
     data() {
         return {
             difficulty: "Easy",
+            generating: false,
         };
     },
     computed: {
@@ -19,13 +20,15 @@ export default {
     },
     methods: {
         async generatePuzzle() {
-            this.store.generatePuzzle();
+            this.generating = true;
+            await this.store.generatePuzzle();
             console.log(this.store.grid);
+            this.generating = false;
         },
-        setDifficulty(level) {
+        async setDifficulty(level) {
             this.difficulty = level;
             this.store.setDifficulty(level);
-            this.generatePuzzle();
+            await this.generatePuzzle();
         },
         async proceedToPlay() {
             try {
@@ -41,8 +44,8 @@ export default {
             }
         },
     },
-    mounted() {
-        this.generatePuzzle();
+    async mounted() {
+        await this.generatePuzzle();
     },
 };
 </script>
@@ -55,6 +58,7 @@ export default {
                 v-for="level in ['Easy', 'Intermediate', 'Hard']"
                 :key="level"
                 @click="setDifficulty(level)"
+                :disabled="generating"
                 :class="{ active: difficulty === level }"
                 class="btn"
             >
@@ -67,10 +71,15 @@ export default {
             :showNumberBar="false"
         />
         <div class="controls">
-            <button @click="generatePuzzle" class="btn">Generate Again</button>
-            <!-- Home button -->
+            <button @click="generatePuzzle" class="btn" :disabled="generating">
+                Generate Again
+            </button>
             <router-link to="/" class="btn home-btn">Go to Home</router-link>
-            <button @click="proceedToPlay" class="btn primary">
+            <button
+                @click="proceedToPlay"
+                class="btn primary"
+                :disabled="generating"
+            >
                 Start Playing
             </button>
         </div>
@@ -121,6 +130,10 @@ export default {
 .btn.primary {
     background: #4caf50;
     color: white;
+}
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .home-btn {

@@ -61,7 +61,7 @@ def solve_puzzle():
 
         if solved_board:
             return jsonify({
-                'time_taken': time_taken,
+                'timeElapsed': time_taken,
                 'steps': steps,
             }), 200
         else:

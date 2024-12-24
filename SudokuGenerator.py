@@ -167,3 +167,17 @@ class SudokuGenerator:
         board += ('+-' + '-' * 6) * 3 + '+\n'
         print(board)
 
+if __name__ == "__main__":
+    sudoku_generator = SudokuGenerator(debug=True)
+    board =[
+        [0, 0, 0, 4, 0, 0, 0, 0, 0],
+        [6, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 7, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 9, 0, 4, 0],
+        [0, 4, 0, 0, 0, 7, 9, 8, 0],
+        [7, 0, 5, 0, 0, 8, 1, 0, 6],
+        [4, 0, 9, 0, 8, 0, 0, 1, 0],
+        [0, 0, 0, 2, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 6, 0, 0, 0, 0]
+    ]
+    print(sudoku_generator.checkUserBoard(board))

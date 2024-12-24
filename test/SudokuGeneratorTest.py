@@ -75,6 +75,18 @@ class SudokuGeneratorTest(unittest.TestCase):
         self.assertTrue(Sudoku(3, 3, board).has_multiple_solutions())
         self.assertEqual("Invalid board, multiple solutions", message)
 
+    def test_uniqueSolution(self):
+        sudoku = SudokuGenerator()
+        iterations = 100
+        times = []
+        for _ in range(iterations):
+            sudoku.generateSudoku("Hard")
+            start = time.time()
+            sudokuL = Sudoku(3, 3, sudoku.board)
+            end = time.time()
+            times.append(end - start)
+            self.assertFalse(sudokuL.has_multiple_solutions())
+
 if __name__ == '__main__':
     unittest.main()
 

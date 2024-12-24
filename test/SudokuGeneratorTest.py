@@ -78,16 +78,26 @@ class SudokuGeneratorTest(unittest.TestCase):
     def test_uniqueSolution(self):
         sudoku = SudokuGenerator()
         iterations = 100
-        times = []
         for _ in range(iterations):
-            # sudoku.generateSudoku("Easy")
-            # sudoku.generateSudoku("Intermediate")
-            sudoku.generateSudoku("Hard")
-            start = time.time()
+            sudoku.generateSudoku("Easy")
             sudokuL = Sudoku(3, 3, sudoku.board)
-            end = time.time()
-            times.append(end - start)
-            self.assertFalse(sudokuL.has_multiple_solutions())
+            flag = sudokuL.has_multiple_solutions()
+            if flag:
+                sudoku.printBoard()
+            self.assertFalse(flag)
+            sudoku.generateSudoku("Intermediate")
+            sudokuL = Sudoku(3, 3, sudoku.board)
+            flag = sudokuL.has_multiple_solutions()
+            if flag:
+                sudoku.printBoard()
+            self.assertFalse(flag)
+            sudoku.generateSudoku("Hard")
+            sudokuL = Sudoku(3, 3, sudoku.board)
+            flag = sudokuL.has_multiple_solutions()
+            if flag:
+                sudoku.printBoard()
+            self.assertFalse(flag)
+
 
 if __name__ == '__main__':
     unittest.main()

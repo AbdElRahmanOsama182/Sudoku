@@ -80,6 +80,8 @@ class SudokuGeneratorTest(unittest.TestCase):
         iterations = 100
         times = []
         for _ in range(iterations):
+            # sudoku.generateSudoku("Easy")
+            # sudoku.generateSudoku("Intermediate")
             sudoku.generateSudoku("Hard")
             start = time.time()
             sudokuL = Sudoku(3, 3, sudoku.board)

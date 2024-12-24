@@ -75,16 +75,7 @@ class SudokuGenerator:
             toBeRemoved = 40
         else:
             toBeRemoved = 50
-        # any board with 74 or more numbers is guaranteed to have a unique solution
-        # so we can remove the first 7 numbers without checking for the number of solutions
         empty = 0
-        while len(indexes) > 74:
-            row, col = random.choice(indexes)
-            self.board[row][col] = 0
-            indexes.remove((row, col))
-            empty += 1
-        
-        toBeRemoved -= empty
         while toBeRemoved > 0 and len(indexes) > 0:
             removed = self.removeNumbers(indexes, empty)
             toBeRemoved -= removed

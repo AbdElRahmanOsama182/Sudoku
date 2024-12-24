@@ -22,7 +22,7 @@ class Domain:
         return self.domain == 0
 
     def is_singleton(self):
-        return self.domain & (self.domain - 1) == 0
+        return self.domain & (self.domain - 1) == 0 and self.domain != 0
 
     def get_value(self):
         if self.is_singleton():

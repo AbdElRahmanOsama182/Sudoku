@@ -19,7 +19,7 @@ class Solver:
                 
                 for i in range(9):
                     neighbors[cell].add((row, i))
-                              
+                            
                 for i in range(9):
                     neighbors[cell].add((i, col))
                 
@@ -85,7 +85,7 @@ class Solver:
 
     def selectMinimumUnassigned(self, domains):
         return min((cell for cell in domains if not domains[cell].is_singleton()), 
-                   key=lambda cell: len(domains[cell].get_domain()))
+                    key=lambda cell: len(domains[cell].get_domain()))
 
     def isComplete(self, domains):
         return all(domains[cell].is_singleton() for cell in domains)
@@ -100,7 +100,7 @@ class Solver:
             return self.reconstructBoard(domains)
         
         cell = self.selectMinimumUnassigned(domains)
-       
+        
         for value in domains[cell].get_domain():
             domainCopy = {key: v.copy() for key,v in domains.items()}
             domainCopy[cell] = Domain(1 << (value - 1))
@@ -120,49 +120,13 @@ class Solver:
                 else:
                     if added:
                         self.steps.pop()
-        return False  
-    
-    
-    # def isValidSudoku(self, board):
-    #     def is_valid_group(group):
-    #         # Check for numbers 1-9 only
-    #         numbers = [num for num in group if isinstance(num, int) and num != 0]
-    #         return len(numbers) == len(set(numbers)) and all(1 <= num <= 9 for num in numbers)
-
-    #     # Check rows
-    #     for row in board:
-    #         if not is_valid_group(row):
-    #             return False
-
-    #     # Check columns
-    #     for col in range(9):
-    #         if not is_valid_group([board[row][col] for row in range(9)]):
-    #             return False
-
-    #     # Check subgrids
-    #     for subgridRow in range(0, 9, 3):
-    #         for subgridCol in range(0, 9, 3):
-    #             subgrid = [board[row][col]
-    #                     for row in range(subgridRow, subgridRow + 3)
-    #                     for col in range(subgridCol, subgridCol + 3)]
-    #             if not is_valid_group(subgrid):
-    #                 return False
-
-    #     # Check for complete board
-    #     if not all(1 <= board[row][col] <= 9 for row in range(9) for col in range(9)):
-    #         return False
-
-    #     return True
+        return False
 
     def validateSteps(self, board):
         # print(self.steps)
         for step in self.steps:
             for row, col, value in step:
                 board[row][col] = value
-            # print("Step:")
-            # for row in board:
-            #     print(row)
-
         return True
     
     def solve(self):
@@ -178,63 +142,3 @@ class Solver:
                 self.steps.append([(k[0],k[1], v.get_value())])
 
         return self.backtrackingSearch(self.domains), self.steps
-    
-# if __name__ == "__main__":
-#     for _ in range(1):  # Run the solver 5 times
-#         generator = SudokuGenerator("hard")
-#         generator.generateSudoku()
-#         board = [list(row) for row in generator.board]
-
-        
-#         # board = [
-#         #     [0,0, 0, 0, 0, 0, 0, 0, 0],
-#         #     [0, 0, 0,0, 0, 0, 0, 0, 0],
-#         #     [0, 0, 0, 0, 0, 0,0, 0, 0],
-#         #     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-#         #     [0, 0, 0, 0, 0, 0, 0,0, 0],
-#         #     [0, 0, 0, 0, 0,0, 0, 0, 0],
-#         #     [0, 0,0, 0, 0, 0, 0, 0, 0],
-#         #     [0, 0, 0, 0, 0, 0, 0, 0,0],
-#         #     [0, 0, 0, 0, 0, 0, 0, 0, 0]
-#         # ] 
-      
-#         # print("Initial Board:")
-#         # for row in board:
-#         #     print(row)
-
-#         solver = Solver(board)
-#         solvedBoard,_ = solver.solve()
-        
-#         if solvedBoard:
-#             # print("Solved Board:")
-#             # if  solver.isValidSudoku(solvedBoard):
-
-#                 # print("steps")
-                
-#                 solver.validateSteps(board)
-#                 # if(board != solvedBoard):
-#                 #     print("steps are incorrect")
-#                 # else:
-#                 #     print("steps are correct")
-#                 # for(row) in board:
-#                 #     print(row)
-
-#                 # print("Solved Board:")
-#                 # for row in solvedBoard:
-#                 #     print(row)
-#                 print("done")
-#             # else:
-#             #     print("Initial Board:")
-#             #     # for row in board:
-#             #     #     print(row)
-#             #     print("Solved Board:")
-#             #     for row in solvedBoard:
-#             #         print(row)
-#             #     print("The solution is invalid.")
-#             #     break
-#         else:
-#             print("Initial Board:")
-#             for row in board:
-#                 print(row)
-#             print("The solution is invalid.")
-#         # print("="*30)

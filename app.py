@@ -77,4 +77,4 @@ def solve_puzzle():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='localhost', port=8080)
+    app.run(debug=True, host='localhost', port=8080, threaded=False)

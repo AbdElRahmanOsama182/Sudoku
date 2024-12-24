@@ -4,10 +4,12 @@ import time
 from sudoku import Sudoku
 from copy import deepcopy
 class SudokuGenerator:
-    def __init__(self, debug=False):
+    def __init__(self, debug=False, mrv=False):
         self.debug = debug
         self.board = []
         self.validatedBoard = []
+        self.mrv = mrv
+
     def generateSudoku(self, difficulty="Intermediate"):
         self.generateFullBoard()
         if self.debug:
@@ -101,27 +103,61 @@ class SudokuGenerator:
             indexes.remove((row, col))
             return 1 + self.removeNumbers(indexes, empty + 1)
 
-    def countSolutions(self, empty):
+    def countSolutions(self, empty, domains=None):
         if empty == 0:
             self.validatedBoard = deepcopy(self.board)
             return 1
         # board must have at least 17 numbers to have a unique solution
         if empty > 81 - 17:
             return 2
+        if domains is None:
+            domains = self.initDomains()
         count = 0
+        i, j = self.getMRV(domains)
+        if i == -1:
+            return 0
+        for num in domains[i][j].get_domain():
+            domainsCopy = deepcopy(domains)
+            domainsCopy[i][j] = Domain(0)
+            domainsCopy[i][j].add(num)
+            self.updateDomains(domainsCopy, i, j, num)
+            self.board[i][j] = num
+            count += self.countSolutions(empty - 1, domainsCopy)
+            self.board[i][j] = 0
+            domains[i][j].remove(num)
+            # we don't need to know the exact number of solutions so we can return early
+            if count > 1:
+                return count
+        return count
+
+    def getMRV(self, domains):
+        minDomain = 10
+        minIndex = (-1, -1)
         for i in range(9):
             for j in range(9):
-                if self.board[i][j] == 0:
-                    for num in range(1, 10):
-                        if self.isValid(i, j, num):
-                            self.board[i][j] = num
-                            count += self.countSolutions(empty - 1)
-                            self.board[i][j] = 0
-                            # we don't need to know the exact number of solutions so we can return early
-                            if count > 1:
-                                return count
-                    return count
-        return count
+                if self.board[i][j] == 0 and domains[i][j].domain_size() < minDomain:
+                    minDomain = domains[i][j].domain_size()
+                    minIndex = (i, j)
+        return minIndex
+
+    def initDomains(self):
+        domains = [[Domain() for _ in range(9)] for _ in range(9)]
+        for i in range(9):
+            for j in range(9):
+                if self.board[i][j] != 0:
+                    domains[i][j] = Domain(0)
+                    domains[i][j].add(self.board[i][j])
+                    self.updateDomains(domains, i, j, self.board[i][j])
+        return domains
+
+    def updateDomains(self, domains, i, j, num):
+        for k in range(9):
+            domains[i][k].remove(num)
+            domains[k][j].remove(num)
+        bRow, bCol = 3 * (i // 3), 3 * (j // 3)
+        for k in range(3):
+            for l in range(3):
+                domains[k + bRow][l + bCol].remove(num)
 
     def isFull(self):
         for i in range(9):
@@ -167,3 +203,21 @@ class SudokuGenerator:
         board += ('+-' + '-' * 6) * 3 + '+\n'
         print(board)
 
+if __name__ == '__main__':
+    board = [
+            [9, 0, 0, 2, 0, 0, 6, 0, 0],
+            [0, 0, 0, 0, 7, 0, 0, 8, 0],
+            [2, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 7, 3, 0, 5, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 9, 0, 0],
+            [0, 5, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 4, 5, 7],
+            [0, 0, 0, 8, 0, 6, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 3, 0]
+        ]
+    sudoku = SudokuGenerator(debug=True, mrv=True)
+    sudoku.board = board
+    sudoku.printBoard()
+    print(sudoku.checkUserBoard(board))
+    sudokuL = Sudoku(3, 3, board)
+    print(sudokuL.has_multiple_solutions())

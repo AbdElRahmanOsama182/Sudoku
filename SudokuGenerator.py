@@ -1,7 +1,7 @@
 import random
 from Domain import Domain
 import time
-from sudoku import Sudoku
+# from sudoku import Sudoku
 from copy import deepcopy
 class SudokuGenerator:
     def __init__(self, debug=False, mrv=False):
@@ -203,21 +203,17 @@ class SudokuGenerator:
         board += ('+-' + '-' * 6) * 3 + '+\n'
         print(board)
 
-if __name__ == '__main__':
-    board = [
-            [9, 0, 0, 2, 0, 0, 6, 0, 0],
-            [0, 0, 0, 0, 7, 0, 0, 8, 0],
-            [2, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 7, 3, 0, 5, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 9, 0, 0],
-            [0, 5, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 4, 5, 7],
-            [0, 0, 0, 8, 0, 6, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 3, 0]
-        ]
-    sudoku = SudokuGenerator(debug=True, mrv=True)
-    sudoku.board = board
-    sudoku.printBoard()
-    print(sudoku.checkUserBoard(board))
-    sudokuL = Sudoku(3, 3, board)
-    print(sudokuL.has_multiple_solutions())
+if __name__ == "__main__":
+    sudoku_generator = SudokuGenerator(debug=True)
+    board =[
+        [0, 0, 0, 4, 0, 0, 0, 0, 0],
+        [6, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 7, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 9, 0, 4, 0],
+        [0, 4, 0, 0, 0, 7, 9, 8, 0],
+        [7, 0, 5, 0, 0, 8, 1, 0, 6],
+        [4, 0, 9, 0, 8, 0, 0, 1, 0],
+        [0, 0, 0, 2, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 6, 0, 0, 0, 0]
+    ]
+    print(sudoku_generator.checkUserBoard(board))

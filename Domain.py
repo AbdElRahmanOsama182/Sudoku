@@ -28,7 +28,7 @@ class Domain:
         if self.is_singleton():
             return self.domain.bit_length()
         return 0
-
+    
     def get_domain(self):
         return [i + 1 for i in range(9) if self.domain & (1 << i)]
 
@@ -37,6 +37,9 @@ class Domain:
 
     def __str__(self):
         return str(self.get_domain())
+    
+    def copy(self):
+        return Domain(self.domain)
 
 if __name__ == '__main__':
     domain = Domain(0b000000001)

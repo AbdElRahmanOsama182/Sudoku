@@ -85,7 +85,7 @@ export default {
 .generate h2 {
     font-size: 2.2rem;
     font-weight: normal;
-    color: #317133;
+    color: #3ca540;
     text-align: center;
     margin-bottom: 20px;
     letter-spacing: 1px;

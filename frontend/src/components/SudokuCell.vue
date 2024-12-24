@@ -21,6 +21,10 @@ export default {
             type: Boolean,
             default: false,
         },
+        isIncorrect: {
+            type: Boolean,
+            default: false
+        }
     },
     methods: {
         selectCell() {
@@ -46,7 +50,7 @@ export default {
 <template>
     <div
         class="cell"
-        :class="{ isfixed: isFixed, selected: isSelected }"
+        :class="{ isfixed: isFixed, selected: isSelected, isincorrect: isIncorrect}"
         @click="toggleselectCell"
     >
         <span>{{ value }}</span>
@@ -71,5 +75,11 @@ export default {
 
 .cell.selected {
     background-color: #7f9eb6;
+}
+
+.cell.isincorrect {
+    background-color: #f8d7da; /* Light red background */
+    border-color: #f5c2c7; /* Light red border */
+    color: #842029; /* Dark red text for visibility */
 }
 </style>

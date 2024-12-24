@@ -17,10 +17,12 @@ export default {
     data() {
         return {
             isComplete: false,
+            incorrectCell: Array.from({ length: 9 }, () => Array(9).fill(false)) // 9x9 array of false
         };
     },
     methods: {
         updateCell({ row, col, value }) {
+            this.incorrectCell[row][col] = false;
             this.store.setCellValue(row, col, value);
             this.checkCompletion();
         },
@@ -36,27 +38,36 @@ export default {
                         this.store.grid[row][col].value !==
                             this.store.solutionGrid[row][col]
                     ) {
+                        this.incorrectCell[row][col] = true;
                         flag = false;
-                        break;
                     }
                 }
             }
             if (flag) {
-                alert("Your progress is correct!");
-            } else {
-                alert("Your progress is incorrect!");
+              if (!this.isComplete)
+                alert("All looking good till now!");
+              else
+                alert("Congratulations! You solved the puzzle!");
+            }
+            else {
+                alert("Some of the answers are not correct :(");
             }
         },
         clearGrid() {
             this.store.clearGrid(); // Clear the grid in the store
+            for (let i = 0; i < 9; i++) {
+              for (let j = 0; j < 9; j++) {
+                this.incorrectCell[i][j] = false;
+              }
+            }
         },
         checkCompletion() {
             const isComplete = this.grid.every((row) =>
                 row.every((cell) => cell.value !== null)
             );
-            if (isComplete && this.store.validateGrid()) {
+            if (isComplete) {
                 this.isComplete = true;
-                alert("Congratulations! You solved the puzzle!");
+                this.validateCurrentProgress();
             }
         },
     },
@@ -72,6 +83,7 @@ export default {
         <SudokuGrid
             :grid="grid"
             :showNumberBar="true"
+            :incorrectCell="this.incorrectCell"
             @update-cell="updateCell"
         />
         <div class="controls">

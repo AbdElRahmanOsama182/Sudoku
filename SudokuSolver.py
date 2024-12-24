@@ -68,12 +68,19 @@ class Solver:
 
         while queue:
             x, y = queue.popleft()
+            domainXbefore = domains[x].copy()
+
             if self.revise(x, y, domains):
-                if domains[x].is_empty():  
-                    return False
+                if(domainXbefore != domains[x]):
+                    with open('algorithms.log', 'a') as log_file:
+                            log_file.write(f"Domain before revision (x={x}): {domainXbefore.get_domain()}\n")
+                            log_file.write(f"Domain after revision (x={x}): {domains[x].get_domain()}\n")
+                            log_file.write(f"Domain of y (y={y}): {domains[y].get_domain()}\n")
+                            log_file.write("="*50 + "\n")
                 for neighbor in self.neighbors[x]:
                     if neighbor != y:
                         queue.append((neighbor, x))
+
         return True
 
     def selectMinimumUnassigned(self, domains):
@@ -116,36 +123,36 @@ class Solver:
         return False  
     
     
-    def isValidSudoku(self, board):
-        def is_valid_group(group):
-            # Check for numbers 1-9 only
-            numbers = [num for num in group if num != 0]
-            return len(numbers) == len(set(numbers)) and all(1 <= num <= 9 for num in numbers)
-    
-        # Check rows
-        for row in board:
-            if not is_valid_group(row):
-                return False
-        
-        # Check columns
-        for col in range(9):
-            if not is_valid_group([board[row][col] for row in range(9)]):
-                return False
-        
-        # Check subgrids
-        for subgridRow in range(0, 9, 3):
-            for subgridCol in range(0, 9, 3):
-                subgrid = [board[row][col]
-                        for row in range(subgridRow, subgridRow + 3)
-                        for col in range(subgridCol, subgridCol + 3)]
-                if not is_valid_group(subgrid):
-                    return False
-        
-        # Check for complete board
-        if not all(1 <= board[row][col] <= 9 for row in range(9) for col in range(9)):
-            return False
-        
-        return True
+    # def isValidSudoku(self, board):
+    #     def is_valid_group(group):
+    #         # Check for numbers 1-9 only
+    #         numbers = [num for num in group if isinstance(num, int) and num != 0]
+    #         return len(numbers) == len(set(numbers)) and all(1 <= num <= 9 for num in numbers)
+
+    #     # Check rows
+    #     for row in board:
+    #         if not is_valid_group(row):
+    #             return False
+
+    #     # Check columns
+    #     for col in range(9):
+    #         if not is_valid_group([board[row][col] for row in range(9)]):
+    #             return False
+
+    #     # Check subgrids
+    #     for subgridRow in range(0, 9, 3):
+    #         for subgridCol in range(0, 9, 3):
+    #             subgrid = [board[row][col]
+    #                     for row in range(subgridRow, subgridRow + 3)
+    #                     for col in range(subgridCol, subgridCol + 3)]
+    #             if not is_valid_group(subgrid):
+    #                 return False
+
+    #     # Check for complete board
+    #     if not all(1 <= board[row][col] <= 9 for row in range(9) for col in range(9)):
+    #         return False
+
+    #     return True
 
     def validateSteps(self, board):
         # print(self.steps)
@@ -159,6 +166,8 @@ class Solver:
         return True
     
     def solve(self):
+        with open('algorithms.log', 'w') as log_file:
+            log_file.write("")
 
         domainCopy = {key: v.copy() for key,v in self.domains.items()}
         self.ac3(self.domains)
@@ -171,9 +180,12 @@ class Solver:
         return self.backtrackingSearch(self.domains), self.steps
     
 # if __name__ == "__main__":
-#     for _ in range(10000):  # Run the solver 5 times
-#         generator = SudokuGenerator()
-#         board = generator.board
+#     for _ in range(1):  # Run the solver 5 times
+#         generator = SudokuGenerator("hard")
+#         generator.generateSudoku()
+#         board = [list(row) for row in generator.board]
+
+        
 #         # board = [
 #         #     [0,0, 0, 0, 0, 0, 0, 0, 0],
 #         #     [0, 0, 0,0, 0, 0, 0, 0, 0],
@@ -191,30 +203,35 @@ class Solver:
 #         #     print(row)
 
 #         solver = Solver(board)
-#         solvedBoard = solver.solve()
+#         solvedBoard,_ = solver.solve()
         
 #         if solvedBoard:
 #             # print("Solved Board:")
-#             if  solver.isValidSudoku(solvedBoard):
+#             # if  solver.isValidSudoku(solvedBoard):
 
 #                 # print("steps")
                 
 #                 solver.validateSteps(board)
-#                 if(board != solvedBoard):
-#                     print("steps are incorrect")
-
+#                 # if(board != solvedBoard):
+#                 #     print("steps are incorrect")
+#                 # else:
+#                 #     print("steps are correct")
 #                 # for(row) in board:
 #                 #     print(row)
-#                 # print("done")
-#             else:
-#                 print("Initial Board:")
-#                 # for row in board:
+
+#                 # print("Solved Board:")
+#                 # for row in solvedBoard:
 #                 #     print(row)
-#                 print("Solved Board:")
-#                 for row in solvedBoard:
-#                     print(row)
-#                 print("The solution is invalid.")
-#                 break
+#                 print("done")
+#             # else:
+#             #     print("Initial Board:")
+#             #     # for row in board:
+#             #     #     print(row)
+#             #     print("Solved Board:")
+#             #     for row in solvedBoard:
+#             #         print(row)
+#             #     print("The solution is invalid.")
+#             #     break
 #         else:
 #             print("Initial Board:")
 #             for row in board:
